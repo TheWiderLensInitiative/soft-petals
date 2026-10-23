@@ -20,7 +20,7 @@ const DEFAULT_SECTIONS: SectionConfig[] = [
     heading: "Shop Our Hair",
     subheading: "100% natural human hair bundles, wigs, closures and frontals.",
   },
-  { key: "about", visible: true, navLabel: "About", heading: "Why Soft Pedals", subheading: "" },
+  { key: "about", visible: true, navLabel: "About", heading: "Why Soft Petals", subheading: "" },
   { key: "gallery", visible: true, navLabel: "Gallery", heading: "Real Hair, Real Results", subheading: "" },
   { key: "testimonials", visible: true, navLabel: "Reviews", heading: "Customer Love", subheading: "" },
   {
@@ -36,7 +36,7 @@ const DEFAULT_SECTIONS: SectionConfig[] = [
 
 export const DEFAULT_SETTINGS: SiteSettings = {
   brand: {
-    name: "Soft Pedals",
+    name: "Soft Petals",
     tagline: "100% Natural Human Hair",
     logoUrl: "",
     faviconUrl: "",

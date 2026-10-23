@@ -1,6 +1,6 @@
-# Soft Pedals — website + owner dashboard
+# Soft Petals — website + owner dashboard
 
-Next.js shop site for Soft Pedals (100% natural human hair: bundles, wigs, closures, weave). Everything visitors see is stored in Supabase
+Next.js shop site for Soft Petals (100% natural human hair: bundles, wigs, closures, weave). Everything visitors see is stored in Supabase
 and edited by the owner at `/admin`: business info, logo, colors, fonts, homepage section order and
 titles, contact info and hours, socials, services, products (each with its own Stripe Payment Link, plus optional lengths with their own price and link),
 gallery, reviews, FAQ/policies, and deals (top banner, popup, or both, with optional dates).

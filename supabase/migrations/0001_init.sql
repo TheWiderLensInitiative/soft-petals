@@ -1,4 +1,4 @@
--- Soft Pedals site schema: everything on the public site comes from these tables.
+-- Soft Petals site schema: everything on the public site comes from these tables.
 -- Public visitors can read; only users listed in public.admins can write.
 
 create table public.admins (
