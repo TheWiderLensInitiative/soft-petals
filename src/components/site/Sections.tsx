@@ -35,6 +35,29 @@ function groupBy<T extends { category: string }>(items: T[]) {
   return [...groups.entries()];
 }
 
+/** Sections with nothing in them are skipped on the page and in the menu. */
+export function hasContent(key: SectionConfig["key"], data: SiteData): boolean {
+  const c = data.settings.contact;
+  switch (key) {
+    case "services":
+      return data.services.length > 0;
+    case "products":
+      return data.products.length > 0;
+    case "gallery":
+      return data.gallery.length > 0;
+    case "testimonials":
+      return data.testimonials.length > 0;
+    case "faqs":
+      return data.faqs.length > 0;
+    case "contact":
+      return Boolean(
+        c.phone || c.email || c.address || c.hours.some((h) => h.day || h.hours) || Object.values(data.settings.social).some(Boolean),
+      );
+    default:
+      return true;
+  }
+}
+
 export function Section({ section, data }: { section: SectionConfig; data: SiteData }) {
   const { settings } = data;
   switch (section.key) {
@@ -51,7 +74,11 @@ export function Section({ section, data }: { section: SectionConfig; data: SiteD
             </>
           )}
           <div className="container hero-content">
-            {settings.brand.tagline && <div className="eyebrow">{settings.brand.tagline}</div>}
+            {h.logoUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={h.logoUrl} alt={settings.brand.name} className="hero-logo" />
+            )}
+            {settings.brand.tagline && !h.logoUrl && <div className="eyebrow">{settings.brand.tagline}</div>}
             <h1>{h.heading}</h1>
             {h.subheading && <p className="hero-sub">{h.subheading}</p>}
             <div className="hero-actions">

@@ -17,7 +17,7 @@ export interface SectionConfig {
 }
 
 export interface SiteSettings {
-  brand: { name: string; tagline: string; logoUrl: string; faviconUrl: string };
+  brand: { name: string; tagline: string; logoUrl: string; showName: boolean; faviconUrl: string };
   theme: {
     primary: string;
     primaryText: string;
@@ -26,10 +26,12 @@ export interface SiteSettings {
     surface: string;
     text: string;
     mutedText: string;
+    headingColor: string;
     headerBackground: string;
     headerText: string;
     footerBackground: string;
     footerText: string;
+    logoFont: string;
     headingFont: string;
     bodyFont: string;
     baseFontSize: number;
@@ -45,6 +47,7 @@ export interface SiteSettings {
   social: { instagram: string; facebook: string; tiktok: string; youtube: string; x: string };
   booking: { label: string; url: string; showInHeader: boolean };
   hero: {
+    logoUrl: string;
     heading: string;
     subheading: string;
     imageUrl: string;
