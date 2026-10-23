@@ -38,9 +38,9 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   brand: {
     name: "Soft Petals",
     tagline: "Raw Hair Collection",
-    logoUrl: "/brand/icon.png",
+    logoUrl: "/brand/icon.webp",
     showName: true,
-    faviconUrl: "/brand/icon.png",
+    faviconUrl: "/brand/icon.webp",
   },
   theme: {
     // Taken from the Soft Petals logo: black, hot pink, gold.
