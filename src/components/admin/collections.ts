@@ -15,6 +15,14 @@ export interface CollectionDef {
 const STRIPE_HELP =
   "Paste this item's Stripe Payment Link (Stripe Dashboard → Payment Links → New). The button on the site goes straight to it.";
 
+/** A product can be bought online if it has a link, or every option in stock has one. */
+export function hasStripeLink(r: Record<string, unknown>): boolean {
+  if (r.stripe_link) return true;
+  const variants = Array.isArray(r.variants) ? (r.variants as { stripe_link?: string; in_stock?: boolean }[]) : [];
+  const live = variants.filter((v) => v.in_stock !== false);
+  return live.length > 0 && live.every((v) => v.stripe_link);
+}
+
 const money = (v: unknown) => (typeof v === "number" ? `$${v.toFixed(2)}` : "");
 
 export const COLLECTIONS: Record<string, CollectionDef> = {
@@ -22,11 +30,18 @@ export const COLLECTIONS: Record<string, CollectionDef> = {
     table: "products",
     label: "Products",
     singular: "product",
-    intro: "Everything you sell online: bundles, wigs, closures, care products. Each one gets its own Stripe link.",
+    intro: "Everything you sell: bundles, wigs, closures, frontals, care products. Each product (or each length) gets its own Stripe link.",
     titleField: "name",
     imageField: "image_url",
     subtitle: (r) =>
-      [money(r.price), r.category, !r.stripe_link && "⚠ no Stripe link", !r.in_stock && "sold out", r.featured && "★ featured"]
+      [
+        money(r.price),
+        r.category,
+        Array.isArray(r.variants) && r.variants.length && `${r.variants.length} options`,
+        !hasStripeLink(r) && "⚠ no Stripe link",
+        !r.in_stock && "sold out",
+        r.featured && "★ featured",
+      ]
         .filter(Boolean)
         .join(" · "),
     fields: [
@@ -35,30 +50,36 @@ export const COLLECTIONS: Record<string, CollectionDef> = {
       { name: "description", label: "Description", type: "textarea" },
       { name: "price", label: "Price", type: "money", placeholder: "120.00" },
       { name: "compare_at_price", label: "Original price (shows crossed out for a sale)", type: "money" },
-      { name: "category", label: "Category", type: "text", placeholder: "Bundles, Wigs, Hair Care…", help: "Products with the same category are grouped and filterable in the shop." },
+      { name: "category", label: "Category", type: "text", placeholder: "Bundles, Wigs, Closures, Frontals…", help: "Customers can filter the shop by category." },
       { name: "stripe_link", label: "Stripe payment link", type: "url", placeholder: "https://buy.stripe.com/…", help: STRIPE_HELP },
+      {
+        name: "variants",
+        label: "Options (lengths, densities…)",
+        type: "variants",
+        help: "Optional. Add one row per choice, each with its own price and Stripe link. Empty price or link uses the ones above.",
+      },
       { name: "in_stock", label: "In stock", type: "checkbox" },
       { name: "featured", label: "Feature on the homepage", type: "checkbox" },
       { name: "active", label: "Show on website", type: "checkbox" },
     ],
-    blank: { name: "", description: "", price: null, compare_at_price: null, category: "", image_url: "", stripe_link: "", in_stock: true, featured: false, active: true },
+    blank: { name: "", description: "", price: null, compare_at_price: null, category: "", image_url: "", stripe_link: "", variants: [], in_stock: true, featured: false, active: true },
   },
   services: {
     table: "services",
     label: "Services",
     singular: "service",
-    intro: "Your service menu. Add a Stripe link to take deposits, and a booking link if you use a booking app.",
+    intro: "Optional: installs, custom wig units or anything else you offer besides hair. Turn the Services section on in Site Settings → Homepage Layout.",
     titleField: "name",
     imageField: "image_url",
     subtitle: (r) => [r.price_text, r.duration, r.category].filter(Boolean).join(" · "),
     fields: [
       { name: "name", label: "Service name", type: "text", required: true },
-      { name: "category", label: "Category", type: "text", placeholder: "Natural Hair, Weaves & Installs, Wigs…" },
+      { name: "category", label: "Category", type: "text", placeholder: "Installs, Custom Units…" },
       { name: "price_text", label: "Price", type: "text", placeholder: "From $150", help: "Type it exactly how you want it shown." },
       { name: "duration", label: "Time", type: "text", placeholder: "3 hrs" },
       { name: "description", label: "Description", type: "textarea" },
       { name: "image_url", label: "Photo (optional)", type: "image" },
-      { name: "stripe_link", label: "Stripe payment link (deposit or full price)", type: "url", placeholder: "https://buy.stripe.com/…", help: STRIPE_HELP },
+      { name: "stripe_link", label: "Stripe payment link", type: "url", placeholder: "https://buy.stripe.com/…", help: STRIPE_HELP },
       { name: "booking_url", label: "Booking link", type: "url", help: "Leave empty to use the main booking link from Settings." },
       { name: "active", label: "Show on website", type: "checkbox" },
     ],
@@ -109,7 +130,7 @@ export const COLLECTIONS: Record<string, CollectionDef> = {
     table: "gallery",
     label: "Gallery",
     singular: "photo",
-    intro: "Photos of your work.",
+    intro: "Photos of the hair and customers wearing it.",
     titleField: "caption",
     imageField: "image_url",
     fields: [
@@ -140,7 +161,7 @@ export const COLLECTIONS: Record<string, CollectionDef> = {
     table: "faqs",
     label: "FAQ & Policies",
     singular: "question",
-    intro: "Questions, deposit rules, late and cancellation policies.",
+    intro: "Shipping, returns, hair care tips and anything customers ask a lot.",
     titleField: "question",
     fields: [
       { name: "question", label: "Question", type: "text", required: true },

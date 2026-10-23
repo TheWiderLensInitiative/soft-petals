@@ -1,20 +1,17 @@
 import Link from "next/link";
-import { COLLECTIONS } from "@/components/admin/collections";
+import { COLLECTIONS, hasStripeLink } from "@/components/admin/collections";
 import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function Overview() {
   const supabase = await createClient();
-  const keys = ["promotions", "products", "services", "gallery", "testimonials", "faqs"];
+  const keys = ["products", "promotions", "gallery", "testimonials", "faqs", "services"];
   const counts = await Promise.all(
     keys.map((k) => supabase.from(COLLECTIONS[k].table).select("id", { count: "exact", head: true }).eq("active", true)),
   );
-  const { count: missingStripe } = await supabase
-    .from("products")
-    .select("id", { count: "exact", head: true })
-    .eq("active", true)
-    .eq("stripe_link", "");
+  const { data: live } = await supabase.from("products").select("stripe_link, variants").eq("active", true);
+  const missingStripe = (live ?? []).filter((p) => !hasStripeLink(p)).length;
 
   return (
     <div>

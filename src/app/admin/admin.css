@@ -515,3 +515,33 @@
 .login-card h1 {
   font-size: 1.4rem;
 }
+.variants {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+.variant-row {
+  display: grid;
+  grid-template-columns: 1fr 0.7fr 2fr auto auto;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+}
+.check-sm {
+  padding-top: 0;
+  white-space: nowrap;
+}
+@media (max-width: 700px) {
+  .variant-row {
+    grid-template-columns: 1fr 1fr;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--a-border);
+  }
+  .variant-row input:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+}
+.field-wide {
+  grid-column: 1 / -1;
+}

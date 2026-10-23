@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FONT_OPTIONS } from "@/lib/defaults";
 import { createClient } from "@/lib/supabase/client";
+import type { Variant } from "@/lib/types";
 
 export type FieldType =
   | "text"
@@ -15,7 +16,8 @@ export type FieldType =
   | "select"
   | "color"
   | "font"
-  | "datetime";
+  | "datetime"
+  | "variants";
 
 export interface FieldDef {
   name: string;
@@ -118,6 +120,9 @@ export function Field({
     case "image":
       input = <ImageInput value={(value as string) ?? ""} onChange={onChange} />;
       break;
+    case "variants":
+      input = <VariantsInput value={Array.isArray(value) ? (value as Variant[]) : []} onChange={onChange} />;
+      break;
     default:
       input = (
         <input
@@ -132,7 +137,7 @@ export function Field({
       );
   }
   return (
-    <div className="field">
+    <div className={`field ${def.type === "variants" || def.type === "textarea" ? "field-wide" : ""}`}>
       <label htmlFor={id}>
         {def.label}
         {def.required && <span className="req"> *</span>}
@@ -154,6 +159,42 @@ function ColorInput({ id, value, onChange }: { id: string; value: string; onChan
           Clear
         </button>
       )}
+    </div>
+  );
+}
+
+function VariantsInput({ value, onChange }: { value: Variant[]; onChange: (v: Variant[]) => void }) {
+  const set = (i: number, patch: Partial<Variant>) => onChange(value.map((v, j) => (j === i ? { ...v, ...patch } : v)));
+  return (
+    <div className="variants">
+      {value.map((v, i) => (
+        <div key={i} className="variant-row">
+          <input value={v.label} placeholder={'Option, e.g. 18"'} aria-label="Option name" onChange={(e) => set(i, { label: e.target.value })} />
+          <input
+            type="number"
+            step="0.01"
+            value={v.price ?? ""}
+            placeholder="Price"
+            aria-label="Price"
+            onChange={(e) => set(i, { price: e.target.value === "" ? null : Number(e.target.value) })}
+          />
+          <input value={v.stripe_link} placeholder="Stripe link for this option" aria-label="Stripe link" onChange={(e) => set(i, { stripe_link: e.target.value })} />
+          <label className="check check-sm">
+            <input type="checkbox" checked={v.in_stock} onChange={(e) => set(i, { in_stock: e.target.checked })} />
+            <span>In stock</span>
+          </label>
+          <button type="button" className="link-btn danger" onClick={() => onChange(value.filter((_, j) => j !== i))}>
+            Remove
+          </button>
+        </div>
+      ))}
+      <button
+        type="button"
+        className="btn-admin btn-secondary"
+        onClick={() => onChange([...value, { label: "", price: null, stripe_link: "", in_stock: true }])}
+      >
+        + Add option
+      </button>
     </div>
   );
 }

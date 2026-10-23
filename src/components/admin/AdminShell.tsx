@@ -9,7 +9,7 @@ import { COLLECTIONS } from "./collections";
 const NAV = [
   { href: "/admin", label: "Overview" },
   { href: "/admin/settings", label: "Site Settings" },
-  ...["promotions", "products", "services", "gallery", "testimonials", "faqs"].map((k) => ({
+  ...["products", "promotions", "gallery", "testimonials", "faqs", "services"].map((k) => ({
     href: `/admin/${k}`,
     label: COLLECTIONS[k].label,
   })),

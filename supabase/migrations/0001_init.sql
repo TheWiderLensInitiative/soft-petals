@@ -1,4 +1,4 @@
--- Salon site schema: everything on the public site comes from these tables.
+-- Soft Pedals site schema: everything on the public site comes from these tables.
 -- Public visitors can read; only users listed in public.admins can write.
 
 create table public.admins (
@@ -33,6 +33,8 @@ create table public.products (
   category text not null default '',
   image_url text not null default '',
   stripe_link text not null default '',
+  -- Optional choices such as lengths: [{label, price, stripe_link, in_stock}]
+  variants jsonb not null default '[]'::jsonb,
   in_stock boolean not null default true,
   featured boolean not null default false,
   active boolean not null default true,

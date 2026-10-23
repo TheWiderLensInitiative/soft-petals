@@ -662,3 +662,21 @@ img {
     opacity: 0;
   }
 }
+
+.variant {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 0.4rem;
+}
+.variant select {
+  font: inherit;
+  font-weight: 400;
+  padding: 0.5rem 0.6rem;
+  border-radius: calc(var(--radius) / 2);
+  border: 1px solid color-mix(in srgb, var(--text) 20%, transparent);
+  background: var(--surface);
+  color: var(--text);
+}

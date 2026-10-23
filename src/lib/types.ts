@@ -59,6 +59,8 @@ export interface SiteSettings {
     buyLabel: string;
     soldOutLabel: string;
     noLinkLabel: string;
+    optionLabel: string;
+    fromLabel: string;
     currency: string;
     showShopPage: boolean;
     shopNavLabel: string;
@@ -67,6 +69,13 @@ export interface SiteSettings {
   sections: SectionConfig[];
   footer: { text: string };
   seo: { title: string; description: string; ogImageUrl: string };
+}
+
+export interface Variant {
+  label: string;
+  price: number | null;
+  stripe_link: string;
+  in_stock: boolean;
 }
 
 export interface Product {
@@ -78,6 +87,7 @@ export interface Product {
   category: string;
   image_url: string;
   stripe_link: string;
+  variants: Variant[];
   in_stock: boolean;
   featured: boolean;
   active: boolean;
